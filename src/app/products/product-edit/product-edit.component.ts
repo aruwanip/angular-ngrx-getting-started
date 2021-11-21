@@ -6,7 +6,7 @@ import { Product } from '../product';
 import { ProductService } from '../product.service';
 import { GenericValidator } from '../../shared/generic-validator';
 import { NumberValidators } from '../../shared/number.validator';
-import { getCurrentProduct, State } from '../state/product.reducer';
+import { getCurrentProduct, State } from '../state';
 import * as ProductActions from '../state/product.actions';
 import { tap } from 'rxjs/operators';
 import { Observable } from 'rxjs';
