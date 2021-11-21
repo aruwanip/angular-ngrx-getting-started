@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 
-import { Observable, of, BehaviorSubject, throwError } from 'rxjs';
+import { Observable, of, throwError } from 'rxjs';
 import { catchError, tap, map } from 'rxjs/operators';
 
 import { Product } from './product';
@@ -13,14 +13,7 @@ export class ProductService {
   private productsUrl = 'api/products';
   private products: Product[];
 
-  private selectedProductSource = new BehaviorSubject<Product | null>(null);
-  selectedProductChanges$ = this.selectedProductSource.asObservable();
-
   constructor(private http: HttpClient) { }
-
-  changeSelectedProduct(selectedProduct: Product | null): void {
-    this.selectedProductSource.next(selectedProduct);
-  }
 
   getProducts(): Observable<Product[]> {
     if (this.products) {
@@ -32,17 +25,6 @@ export class ProductService {
         tap(data => this.products = data),
         catchError(this.handleError)
       );
-  }
-
-  // Return an initialized product
-  newProduct(): Product {
-    return {
-      id: 0,
-      productName: '',
-      productCode: 'New',
-      description: '',
-      starRating: 0
-    };
   }
 
   createProduct(product: Product): Observable<Product> {
@@ -64,8 +46,8 @@ export class ProductService {
     const url = `${this.productsUrl}/${id}`;
     return this.http.delete<Product>(url, { headers })
       .pipe(
-        tap(data => console.log('deleteProduct: ' + id)),
-        tap(data => {
+        tap(() => console.log('deleteProduct: ' + id)),
+        tap(() => {
           const foundIndex = this.products.findIndex(item => item.id === id);
           if (foundIndex > -1) {
             this.products.splice(foundIndex, 1);
