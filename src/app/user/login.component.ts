@@ -6,6 +6,7 @@ import { AuthService } from './auth.service';
 import { Store } from '@ngrx/store';
 import { getMaskUsername, UserState } from './state/user.reducer';
 import * as UserActions from './state/user.actions';
+import { Observable } from 'rxjs';
 
 @Component({
   templateUrl: './login.component.html',
@@ -13,17 +14,13 @@ import * as UserActions from './state/user.actions';
 })
 export class LoginComponent implements OnInit {
   pageTitle = 'Log In';
-
-  maskUserName: boolean;
+  maskUsername$: Observable<boolean>;
 
   constructor(private authService: AuthService, private router: Router,
               private store: Store<UserState>) { }
 
   ngOnInit(): void {
-    // TODO: Unsubscribe
-    this.store.select(getMaskUsername).subscribe(
-      maskUsername => this.maskUserName = maskUsername
-    );
+    this.maskUsername$ = this.store.select(getMaskUsername);
   }
 
   cancel(): void {
